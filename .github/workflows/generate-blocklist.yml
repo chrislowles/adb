@@ -1,0 +1,27 @@
+name: Generate YouTube blocklist
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - generate-blocklist.py
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run generator
+        run: python3 generate-blocklist.py
+
+      - name: Commit generated filterlist
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f youtube-blocklist.txt
+          git diff --cached --quiet || git commit -m "chore: regenerate youtube-blocklist.txt"
+          git push
