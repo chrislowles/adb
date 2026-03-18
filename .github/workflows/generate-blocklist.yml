@@ -20,7 +20,7 @@ jobs:
 
       - name: Commit generated filterlist
         run: |
-          git config user.name  "github-actions[bot]"
+          git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -f youtube-blocklist.txt
           git diff --cached --quiet || git commit -m "chore: regenerate youtube-blocklist.txt"
