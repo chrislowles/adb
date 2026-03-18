@@ -2,8 +2,8 @@
 
 ! Domains
 ||letsblock.it^
-!||cyberdrop.me^
-!||instagram.com^
+! ||cyberdrop.me^
+! ||instagram.com^
 !! Yes I block NYT, my filterlist my rules.
 ||nytimes.com^
 
@@ -17,7 +17,8 @@ www.youtube.com##.ytp-ce-element
 !! Certain sections & Breaking News in particular
 www.youtube.com##ytd-rich-section-renderer h2:has-text(/(YouTube Playables|Latest YouTube posts|Top news)/i):upward(ytd-rich-section-renderer)
 www.youtube.com##ytd-shelf-renderer.style-scope:has(span:has-text(/(For you|Explore more|People also watched|Previously watched|From related searches|New for you|Channels new to you)/i))
-! YTM
+
+! YT Music
 !! Filtering by channel/playlist ID or username
 ! music.youtube.com##[href*="<channel-playlist-id-username>"]:upward(ytmusic-two-row-item-renderer)
 
@@ -31,21 +32,11 @@ drive.google.com##button[aria-label='Try Gemini']:upward(.gb_je.gb_ie)
 !! Removes "Suggested for you", "Because you watched [...]" and similar in feed (Temperamental)
 www.instagram.com##+js(json-prune, require.0.3.0.__bbox.require.0.3.1.__bbox.result.data.xdt_api__v1__feed__timeline__connection.edges.[-].node.explore_story.media.explore.title)
 www.instagram.com##+js(json-prune-xhr-response, data.xdt_api__v1__feed__timeline__connection.edges.[-].node.explore_story.media.explore.title, , propsToMatch, url:/api/graphql)
-!! Removes "Threads" in feed
+!! Removes Threads promo in feed
 www.instagram.com##+js(json-prune, require.0.3.0.__bbox.require.0.3.1.__bbox.result.data.xdt_api__v1__feed__timeline__connection.edges.[-].node.bloks_netego.payload)
 www.instagram.com##+js(json-prune-xhr-response, data.xdt_api__v1__feed__timeline__connection.edges.[-].node.bloks_netego.payload, , propsToMatch, url:/api/graphql)
 !! Hides "Threads" hyper-references
 www.instagram.com##a[href="https://www.threads.net/"]
-
-! Threads
-!! Trying and failing to disable autoplay
-||threads.net^$permissions=autoplay=()
-!! Irrelevant notification types
-threads.net##.x1a2a7pz.x1n2onr6 > :has-text(/Your reply got over (.*) views/)
-threads.net##.x1a2a7pz.x1n2onr6 > :has-text(/Your post got over (.*) views/)
-threads.net##.x1a2a7pz.x1n2onr6 > :has-text(/Your thread got over (.*) views/)
-threads.net##.x1a2a7pz.x1n2onr6 > :has-text(/Started a thread/)
-threads.net##.x1a2a7pz.x1n2onr6 > :has-text(/Picked for you/)
 
 ! Odds and ends
 etsy.com##li:has(h2[id^="ad-listing"])
