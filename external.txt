@@ -1,9 +1,0 @@
-https://raw.githubusercontent.com/DandelionSprout/adfilt/master/LegitimateURLShortener.txt
-https://www.squabbled.net/paste/fandomfixeduBlockOrigin.txt
-https://raw.githubusercontent.com/mchangrh/yt-neuter/main/filters/sponsorblock.txt
-https://raw.githubusercontent.com/gijsdev/ublock-hide-yt-shorts/master/list.txt
-https://raw.githubusercontent.com/DandelionSprout/adfilt/master/Dandelion%20Sprout's%20Anti-Malware%20List.txt
-https://raw.githubusercontent.com/DandelionSprout/adfilt/master/TwitchPureViewingExperience.txt
-https://raw.githubusercontent.com/reek/anti-adblock-killer/master/anti-adblock-killer-filters.txt
-https://raw.githubusercontent.com/liamengland1/miscfilters/master/antipaywall.txt
-https://gitflic.ru/project/magnolia1234/bypass-paywalls-clean-filters/blob/raw?file=bpc-paywall-filter.txt
