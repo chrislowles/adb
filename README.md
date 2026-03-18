@@ -1,4 +1,4 @@
-# ubo
+# ublock
 uBlock Origin filters (may work in ABP and AdGuard too)
 
 ### [personal.txt](https://raw.githubusercontent.com/chrislowles/ubo/refs/heads/main/personal.txt)
