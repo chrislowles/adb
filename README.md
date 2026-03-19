@@ -1,4 +1,3 @@
-# filters
 Filters, primarly for uBlock Origin (ABP/AdGuard too, possibly)
 
 ### [youtube-blocklist.txt](https://raw.githubusercontent.com/chrislowles/adb/refs/heads/generated/youtube-blocklist.txt)
