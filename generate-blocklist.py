@@ -71,8 +71,7 @@ CHANNEL_IDS = [
 ]
 
 # VIDEO IDs
-# Cosmetic hide + hard network block. Remove the ||www.youtube.com line in the
-# template below if you only want feed-hiding without blocking direct links.
+# Cosmetic hide + hard network block. Remove the ||www.youtube.com line in the template below if you only want feed-hiding without blocking direct links.
 VIDEO_IDS = [
     "bhq0GzA1yXw",
     "kXRlOMEkC9o",
