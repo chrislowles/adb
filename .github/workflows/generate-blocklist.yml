@@ -28,4 +28,3 @@ jobs:
           git add -f youtube-blocklist.txt
           git diff --cached --quiet || git commit -m "chore: regenerate youtube-blocklist.txt"
           git push origin generated --force
-          git checkout main
