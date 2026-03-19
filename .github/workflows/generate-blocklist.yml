@@ -22,7 +22,10 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git pull --rebase origin main
+          git fetch origin
+          git checkout -B generated origin/generated 2>/dev/null || git checkout --orphan generated
+          git reset
           git add -f youtube-blocklist.txt
           git diff --cached --quiet || git commit -m "chore: regenerate youtube-blocklist.txt"
-          git push
+          git push origin generated --force
+          git checkout main
