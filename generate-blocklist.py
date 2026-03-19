@@ -6,7 +6,7 @@ Output: youtube-blocklist.txt
 """
 
 # CHANNEL IDs
-# Find via: youtube.com/channel/<ID>
+# Find via: www.youtube.com/channel/<ID>
 CHANNEL_IDS = [
     "UCyV8SuQd21sFoPCiB0RgcrA",
     "UCxsQFG_8Dbt1sZhLReL2mUw",
@@ -71,7 +71,7 @@ CHANNEL_IDS = [
 ]
 
 # VIDEO IDs
-# Cosmetic hide + hard network block. Remove the ||youtube.com line in the
+# Cosmetic hide + hard network block. Remove the ||www.youtube.com line in the
 # template below if you only want feed-hiding without blocking direct links.
 VIDEO_IDS = [
     "bhq0GzA1yXw",
@@ -173,7 +173,7 @@ RENDERERS = [
 
 def cosmetic(selector):
     parts = [f"{r}{selector}" for r in RENDERERS]
-    return "youtube.com##" + ", ".join(parts)
+    return "www.youtube.com##" + ", ".join(parts)
 
 out = []
 def ln(s=""): out.append(s)
@@ -194,7 +194,7 @@ ln("! BLOCKED VIDEOS")
 ln()
 for vid in VIDEO_IDS:
     ln(cosmetic(f':has(a[href*="{vid}"])'))
-    ln(f"||youtube.com/watch?v={vid}^")
+    ln(f"||www.youtube.com/watch?v={vid}^")
     ln(f"||youtu.be/{vid}^")
 ln()
 
@@ -210,7 +210,7 @@ result = "\n".join(out)
 with open(OUTPUT_FILE, "w") as f:
     f.write(result)
 
-total = sum(1 for l in out if l.startswith("youtube.com##") or l.startswith("||"))
+total = sum(1 for l in out if l.startswith("www.youtube.com##") or l.startswith("||"))
 print(f"Written {OUTPUT_FILE}  ({total} rules)")
 print(f"  Channels: {len(set(CHANNEL_IDS))}")
 print(f"  Videos:   {len(VIDEO_IDS)} × 2 (cosmetic + network)")
