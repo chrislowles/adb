@@ -169,6 +169,7 @@ RENDERERS = [
     "ytd-compact-video-renderer",
     "ytd-grid-video-renderer",
     "ytd-playlist-video-renderer",
+    "ytd-channel-renderer",
 ]
 
 def cosmetic(selector):
@@ -181,6 +182,9 @@ def ln(s=""): out.append(s)
 ln(f"! Title: YouTube Personal Blocklist")
 ln(f"! Description: Adapted from BlockTube backup - blocks via channel id, video id, broad keywords")
 ln(f"! Generated: {date.today().isoformat()}")
+ln()
+
+ln(f"www.youtube.com##+js(abort-on-property-read, ytInitialPlayerResponse.videoDetails)")
 ln()
 
 ln("! CHANNELS")
