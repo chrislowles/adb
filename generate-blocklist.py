@@ -5,10 +5,8 @@ Edit the three lists below, then run:  python3 generate-blocklist.py
 Output: youtube-blocklist.txt
 """
 
-# ──────────────────────────────────────────────────────────────────────────────
 # CHANNEL IDs
-# Find via: youtube.com/channel/<ID> or from a channel's page source / BlockTube export
-# ──────────────────────────────────────────────────────────────────────────────
+# Find via: youtube.com/channel/<ID>
 CHANNEL_IDS = [
     "UCyV8SuQd21sFoPCiB0RgcrA",
     "UCxsQFG_8Dbt1sZhLReL2mUw",
@@ -72,11 +70,9 @@ CHANNEL_IDS = [
     "UCGh4KSR8TZZlyq3qQDBsBLA",
 ]
 
-# ──────────────────────────────────────────────────────────────────────────────
 # VIDEO IDs
 # Cosmetic hide + hard network block. Remove the ||youtube.com line in the
 # template below if you only want feed-hiding without blocking direct links.
-# ──────────────────────────────────────────────────────────────────────────────
 VIDEO_IDS = [
     "bhq0GzA1yXw",
     "kXRlOMEkC9o",
@@ -136,36 +132,32 @@ VIDEO_IDS = [
     "QITiC4v0Tf8",
 ]
 
-# ──────────────────────────────────────────────────────────────────────────────
 # KEYWORD PATTERNS
 # Format: ("regex_pattern", "human-readable comment")
 # Patterns are matched against both video titles and channel names.
 # Use /regex/i syntax (case-insensitive). Consolidate variants into one entry.
-# ──────────────────────────────────────────────────────────────────────────────
 KEYWORDS = [
-    ("/Charlie Kirk/i",                   "Charlie Kirk"),
-    ("/Pirate\\s?Software/i",             "Pirate Software / PirateSoftware"),
-    ("/Scott Galloway/i",                 "Scott Galloway"),
-    ("/Turk(?:ey|y) Tom/i",              "Turkey Tom / Turky Tom"),
-    ("/Omarchy/i",                        "Omarchy"),
-    ("/Bill Maher/i",                     "Bill Maher"),
-    ("/Nerd City/i",                      "Nerd City"),
-    ("/Karl Jobst/i",                     "Karl Jobst"),
+    ("/Charlie Kirk/i", "Charlie Kirk"),
+    ("/Pirate\\s?Software/i", "Pirate Software / PirateSoftware"),
+    ("/Scott Galloway/i", "Scott Galloway"),
+    ("/Turk(?:ey|y) Tom/i", "Turkey Tom / Turky Tom"),
+    ("/Omarchy/i", "Omarchy"),
+    ("/Bill Maher/i", "Bill Maher"),
+    ("/Nerd City/i", "Nerd City"),
+    ("/Karl Jobst/i", "Karl Jobst"),
     ("/SomeOrdinary(?:Gamers|Podcast)/i", "SomeOrdinaryGamers / SomeOrdinaryPodcast"),
-    ("/penguinz0/i",                      "penguinz0"),
-    ("/Asmongold/i",                      "Asmongold"),
-    ("/h3(?:h3|\\s*podcast)/i",           "h3h3 / h3 podcast"),
-    ("/(?:Hila|Ethan) Klein/i",           "Hila Klein / Ethan Klein"),
-    ("/\\d?kliksphilip/i",               "kliksphilip / 2kliksphilip / 3kliksphilip"),
-    ("/Xanderhal/i",                      "Xanderhal"),
-    ("/mrwhosetheboss/i",                 "mrwhosetheboss"),
-    ("/Evan Carmichael/i",               "Evan Carmichael"),
-    ("/Vaush/i",                          "Vaush"),
+    #("/penguinz0/i", "penguinz0"),
+    ("/Asmongold/i", "Asmongold"),
+    ("/h3(?:h3|\\s*podcast)/i", "h3h3 / h3 podcast"),
+    ("/(?:Hila|Ethan) Klein/i", "Hila Klein / Ethan Klein"),
+    ("/\\d?kliksphilip/i", "kliksphilip / 2kliksphilip / 3kliksphilip"),
+    ("/Xanderhal/i", "Xanderhal"),
+    ("/mrwhosetheboss/i", "mrwhosetheboss"),
+    ("/Evan Carmichael/i", "Evan Carmichael"),
+    ("/Vaush/i", "Vaush"),
 ]
 
-# ──────────────────────────────────────────────────────────────────────────────
 # Generator — no need to edit below this line
-# ──────────────────────────────────────────────────────────────────────────────
 
 from datetime import date
 
@@ -192,26 +184,21 @@ ln(f"! Generated: {date.today().isoformat()}")
 ln(f"! DO NOT EDIT — regenerate by running: python3 generate-blocklist.py")
 ln()
 
-ln("! ═══════════════════════════════════════════════════════")
 ln("! BLOCKED CHANNELS")
-ln("! ═══════════════════════════════════════════════════════")
 ln()
 for cid in sorted(set(CHANNEL_IDS)):
     ln(cosmetic(f':has(a[href*="/channel/{cid}"])'))
 ln()
 
-ln("! ═══════════════════════════════════════════════════════")
 ln("! BLOCKED VIDEOS")
-ln("! ═══════════════════════════════════════════════════════")
 ln()
 for vid in VIDEO_IDS:
     ln(cosmetic(f':has(a[href*="{vid}"])'))
     ln(f"||youtube.com/watch?v={vid}^")
+    ln(f"||youtu.be/{vid}^")
 ln()
 
-ln("! ═══════════════════════════════════════════════════════")
-ln("! BLOCKED KEYWORDS  (title + channel name)")
-ln("! ═══════════════════════════════════════════════════════")
+ln("! BLOCKED KEYWORDS (title + channel name)")
 ln()
 for pattern, comment in KEYWORDS:
     ln(f"! {comment}")
