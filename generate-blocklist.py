@@ -8,6 +8,7 @@ Output: youtube-blocklist.txt
 # CHANNEL IDs
 # Find via: www.youtube.com/channel/<ID>
 CHANNEL_IDS = [
+    "UC1E-JS8L0j1Ei70D9VEFrPQ",
     "UCyV8SuQd21sFoPCiB0RgcrA",
     "UCxsQFG_8Dbt1sZhLReL2mUw",
     "UClCmqa3I2zBYoiNgM_CvA2g",
