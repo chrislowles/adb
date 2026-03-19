@@ -213,5 +213,5 @@ with open(OUTPUT_FILE, "w") as f:
 total = sum(1 for l in out if l.startswith("www.youtube.com##") or l.startswith("||"))
 print(f"Written {OUTPUT_FILE}  ({total} rules)")
 print(f"  Channels: {len(set(CHANNEL_IDS))}")
-print(f"  Videos:   {len(VIDEO_IDS)} × 2 (cosmetic + network)")
-print(f"  Keywords: {len(KEYWORDS)} × 2 (title + channel name)")
+print(f"  Videos:   {len(VIDEO_IDS)} x 2 (cosmetic + network)")
+print(f"  Keywords: {len(KEYWORDS)} x 2 (title + channel name)")
