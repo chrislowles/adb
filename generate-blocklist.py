@@ -131,7 +131,7 @@ VIDEO_IDS = [
     "QITiC4v0Tf8",
 ]
 
-# KEYWORD PATTERNS
+# KEYWORDS
 # Format: ("regex_pattern", "human-readable comment")
 # Patterns are matched against both video titles and channel names.
 # Use /regex/i syntax (case-insensitive). Consolidate variants into one entry.
@@ -178,18 +178,17 @@ out = []
 def ln(s=""): out.append(s)
 
 ln(f"! Title: YouTube Personal Blocklist")
-ln(f"! Description: Converted from BlockTube backup — blocks channels, videos, and title keywords")
+ln(f"! Description: Adapted from BlockTube backup - blocks via channel id, video id, broad keywords")
 ln(f"! Generated: {date.today().isoformat()}")
-ln(f"! DO NOT EDIT — regenerate by running: python3 generate-blocklist.py")
 ln()
 
-ln("! BLOCKED CHANNELS")
+ln("! CHANNELS")
 ln()
 for cid in sorted(set(CHANNEL_IDS)):
     ln(cosmetic(f':has(a[href*="/channel/{cid}"])'))
 ln()
 
-ln("! BLOCKED VIDEOS")
+ln("! VIDEOS")
 ln()
 for vid in VIDEO_IDS:
     ln(cosmetic(f':has(a[href*="{vid}"])'))
@@ -210,7 +209,7 @@ with open(OUTPUT_FILE, "w") as f:
     f.write(result)
 
 total = sum(1 for l in out if l.startswith("www.youtube.com##") or l.startswith("||"))
-print(f"Written {OUTPUT_FILE}  ({total} rules)")
-print(f"  Channels: {len(set(CHANNEL_IDS))}")
-print(f"  Videos:   {len(VIDEO_IDS)} x 2 (cosmetic + network)")
-print(f"  Keywords: {len(KEYWORDS)} x 2 (title + channel name)")
+print(f"Written {OUTPUT_FILE} ({total} rules)")
+print(f"Channels: {len(set(CHANNEL_IDS))}")
+print(f"Videos:   {len(VIDEO_IDS)} x 2 (cosmetic + network)")
+print(f"Keywords: {len(KEYWORDS)} x 2 (title + channel name)")
