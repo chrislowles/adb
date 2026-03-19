@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-YouTube uBlock Origin filterlist generator.
+YouTube uBO filterlist generator.
 Edit the three lists below, then run:  python3 generate-blocklist.py
 Output: youtube-blocklist.txt
 """
