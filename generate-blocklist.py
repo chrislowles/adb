@@ -72,6 +72,15 @@ CHANNEL_IDS = [
     "UCSNPNe6E2EL2iDSg_DDA6iQ",
     "UCNvsIonJdJ5E4EXMa65VYpA",
     "UCGh4KSR8TZZlyq3qQDBsBLA",
+    "UCjQzVyaQX1ESS6mRRQEHNRg",
+    "UCk6N0exSFGSacFCq19kDuNA",
+    "UCB5hBj6G11u89SVGtVRBIVg",
+    "UC0KkQzV-XvTLTToZbs2PrBw",
+    "UC-tzBN46zn34fxBIXcGoprA",
+    "UC5yvaAPBv9cDDMWe6y8wXMA",
+    "UCJ6z_yj_dDNrhn-c8ZyKV4g",
+    "UCmbP0Q_L9NzAQDz8voa4ZTw",
+    "UC65_CVnMw6hvPET_DRDg3GA",
 ]
 
 # VIDEO IDs
@@ -133,6 +142,9 @@ VIDEO_IDS = [
     "LGCJefnJkG4",
     "4ZlwTtgbgVA",
     "QITiC4v0Tf8",
+    "AS7s7T-fDFw",
+    "zzpLW3PdNEg",
+    "fLebOMllWxQ",
 ]
 
 # KEYWORDS
@@ -182,8 +194,8 @@ def cosmetic(selector):
 out = []
 def ln(s=""): out.append(s)
 
-ln(f"! Title: YouTube Personal Blocklist")
-ln(f"! Description: Adapted from BlockTube backup - blocks via channel id, video id, broad keywords")
+ln(f"! Title: YouTube Personal Blocklist (Auto-Generated)")
+ln(f"! Description: Blocks via channel id, video id, broad keywords,")
 ln(f"! Generated: {date.today().isoformat()}")
 ln()
 
@@ -200,8 +212,7 @@ ln("! VIDEOS")
 ln()
 for vid in VIDEO_IDS:
     ln(cosmetic(f':has(a[href*="{vid}"])'))
-    ln(f"||www.youtube.com/watch?v={vid}^")
-    ln(f"||youtu.be/{vid}^")
+    #ln(f"||www.youtube.com/watch?v={vid}^")
 ln()
 
 ln("! BLOCKED KEYWORDS (title + channel name)")
