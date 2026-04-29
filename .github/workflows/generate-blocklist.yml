@@ -2,9 +2,11 @@ name: Generate YouTube blocklist
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
     paths:
       - generate-blocklist.py
+  workflow_dispatch:
 
 jobs:
   generate:
