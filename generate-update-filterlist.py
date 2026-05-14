@@ -199,9 +199,6 @@ ln(f"! Description: Blocks YouTube channel id, video id, broad keywords, among o
 ln(f"! Generated: {date.today().isoformat()}")
 ln()
 
-ln(f"www.youtube.com##+js(abort-on-property-read, ytInitialPlayerResponse.videoDetails)")
-ln()
-
 ln("! CHANNELS")
 ln()
 for cid in sorted(set(CHANNEL_IDS)):
