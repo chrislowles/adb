@@ -1,7 +1,1 @@
-Filters, primarly for uBlock Origin (ABP/AdGuard too, possibly)
-
-### [youtube-blocklist.txt](https://raw.githubusercontent.com/chrislowles/adb/refs/heads/generated/youtube-blocklist.txt)
-Automatically generated filterlist, for personal use only.
-
-### [personal.txt](https://raw.githubusercontent.com/chrislowles/ubo/refs/heads/main/personal.txt)
-A random odds and ends filterlist.
+My (auto-regenerating) personal filterlist, primarly for uBlock Origin (ABP/AdGuard too, possibly), install [here.](https://raw.githubusercontent.com/chrislowles/adb/refs/heads/generated/filterlist.txt)
