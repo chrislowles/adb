@@ -57,5 +57,31 @@ kemono.su##[href="https://v6.realxxx.com/b91ed4ea-3115-4afa-aaae-560bc05a70c3"]:
 ! TuneIn
 tunein.com##.ad-cell-module__container___phfcP
 
-! Bluesky
-bsky.app##[data-testid="homeScreenFeedTabs"]:upward(1)
+! Deviantart
+deviantart.com###block-notice > .block-notice > .banner-wrap
+deviantart.com###block-notice > .block-notice
+
+! YouTube
+!! End Screen links annoy me, begone
+www.youtube.com##.ytp-ce-element
+!! Certain sections & Breaking News in particular
+www.youtube.com##ytd-rich-section-renderer h2:has-text(/(YouTube Playables|Latest YouTube posts|Top news)/i):upward(ytd-rich-section-renderer)
+www.youtube.com##ytd-shelf-renderer.style-scope:has(span:has-text(/(For you|Explore more|People also watched|Previously watched|From related searches|New for you|Channels new to you)/i))
+
+! YT Music (Gonna be working the filtration into the auto-regenerating filterlist for YTM)
+!! Filtering by channel/playlist ID or username
+! music.youtube.com##[href*="<channel-playlist-id-username>"]:upward(ytmusic-two-row-item-renderer)
+
+! Google
+!! External Popups
+||accounts.google.com/gsi/*$xhr,script,3p
+
+! Threads
+!! Trying and failing to disable autoplay
+||threads.net^$permissions=autoplay=()
+!! Irrelevant notification types
+threads.net##.x1a2a7pz.x1n2onr6 > :has-text(/Your reply got over (.*) views/)
+threads.net##.x1a2a7pz.x1n2onr6 > :has-text(/Your post got over (.*) views/)
+threads.net##.x1a2a7pz.x1n2onr6 > :has-text(/Your thread got over (.*) views/)
+threads.net##.x1a2a7pz.x1n2onr6 > :has-text(/Started a thread/)
+threads.net##.x1a2a7pz.x1n2onr6 > :has-text(/Picked for you/)
