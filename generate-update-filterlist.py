@@ -5,7 +5,7 @@ Edit the three lists below, then run:  python3 generate-update-filterlist.py
 Output: filterlist.txt
 """
 
-# CHANNEL IDs
+# YOUTUBE CHANNEL IDs
 # Find via: www.youtube.com/channel/<ID>
 CHANNEL_IDS = [
     "UCxSwqqnJp9HsW0hBrHcp1FQ",
@@ -82,7 +82,7 @@ CHANNEL_IDS = [
     "UC65_CVnMw6hvPET_DRDg3GA",
 ]
 
-# VIDEO IDs
+# YOUTUBE VIDEO IDs
 # Cosmetic hide + hard network block. Remove the ||www.youtube.com line in the template below if you only want feed-hiding without blocking direct links.
 VIDEO_IDS = [
     "bhq0GzA1yXw",
@@ -146,7 +146,7 @@ VIDEO_IDS = [
     "fLebOMllWxQ",
 ]
 
-# KEYWORDS
+# YOUTUBE KEYWORDS
 # Format: ("regex_pattern", "human-readable comment")
 # Patterns are matched against both video titles and channel names.
 # Use /regex/i syntax (case-insensitive). Consolidate variants into one entry.
