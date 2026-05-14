@@ -1,0 +1,29 @@
+name: Generate/Update Filterlist
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - generate-update-filterlist.py
+  workflow_dispatch:
+
+jobs:
+  generate-update-filterlist:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run generator
+        run: python3 generate-update-filterlist.py
+      - name: Commit generated filterlist
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin
+          git checkout -B generated origin/generated 2>/dev/null || git checkout --orphan generated
+          git reset
+          git add -f filterlist.txt
+          git diff --cached --quiet || git commit -m "chore: regenerate filterlist.txt"
+          git push origin generated --force
