@@ -1,1 +1,1 @@
-My (auto-regenerating) personal filterlist, primarly for uBlock Origin (ABP/AdGuard too, possibly), install [here.](https://raw.githubusercontent.com/chrislowles/adb/refs/heads/generated/filterlist.txt)
+My auto-regenerating personal filterlist, primarly for uBlock Origin (ABP/AdGuard too, possibly), install [here.](https://raw.githubusercontent.com/chrislowles/adb/refs/heads/generated/filterlist.txt)
