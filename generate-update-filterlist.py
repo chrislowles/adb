@@ -173,6 +173,7 @@ KEYWORDS = [
 
 # Generator — no need to edit below this line
 
+import os
 from datetime import date
 
 OUTPUT_FILE = "filterlist.txt"
@@ -222,11 +223,24 @@ for pattern, comment in KEYWORDS:
     ln(cosmetic(f":has(#channel-name:has-text({pattern}))"))
     ln()
 
+# Append personal static filters if the file exists
+if os.path.exists("personal.txt"):
+    ln("! ------------------------------------------")
+    ln("! --- Included from static personal.txt  ---")
+    ln("! ------------------------------------------")
+    ln()
+    with open("personal.txt", "r", encoding="utf-8") as pf:
+        for line in pf:
+            # Strip newline characters so we don't end up with double spacing
+            out.append(line.rstrip('\n'))
+
 result = "\n".join(out)
-with open(OUTPUT_FILE, "w") as f:
+with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
     f.write(result)
 
-total = sum(1 for l in out if l.startswith("www.youtube.com##") or l.startswith("||"))
+# Re-calculated the total to include all viable rules (including from personal.txt)
+total = sum(1 for l in out if l.startswith("www.youtube.com##") or l.startswith("||") or ("##" in l and not l.startswith("!")))
+
 print(f"Written {OUTPUT_FILE} ({total} rules)")
 print(f"Channels: {len(set(CHANNEL_IDS))}")
 print(f"Videos:   {len(VIDEO_IDS)} x 2 (cosmetic + network)")
