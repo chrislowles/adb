@@ -34,10 +34,6 @@ kemono.su##[href="https://v6.realxxx.com/b91ed4ea-3115-4afa-aaae-560bc05a70c3"]:
 ! TuneIn
 tunein.com##.ad-cell-module__container___phfcP
 
-! YT Music (Gonna be working artist/channel/etc here into the auto-regenerating filterlist for YTM)
-!! Filtering by channel/playlist ID or username
-! music.youtube.com##[href*="<channel-playlist-id-username>"]:upward(ytmusic-two-row-item-renderer)
-
 ! Google
 !! External Popups
 ||accounts.google.com/gsi/*$xhr,script,3p
