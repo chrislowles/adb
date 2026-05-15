@@ -44,6 +44,7 @@ from datetime import date
 
 OUTPUT_FILE = "filterlist.txt"
 
+# Standard YouTube Renderers (Added Shorts renderers)
 RENDERERS = [
     "ytd-rich-item-renderer",
     "ytd-video-renderer",
@@ -51,39 +52,61 @@ RENDERERS = [
     "ytd-grid-video-renderer",
     "ytd-playlist-video-renderer",
     "ytd-channel-renderer",
+    "ytd-reel-item-renderer",
+    "ytd-reel-video-renderer",
+]
+
+# YouTube Music Renderers
+YTM_RENDERERS = [
+    "ytmusic-two-row-item-renderer",
+    "ytmusic-responsive-list-item-renderer"
 ]
 
 def cosmetic(selector):
     parts = [f"{r}{selector}" for r in RENDERERS]
     return "www.youtube.com##" + ", ".join(parts)
 
+def ytm_cosmetic(selector):
+    parts = [f"{r}{selector}" for r in YTM_RENDERERS]
+    return "music.youtube.com##" + ", ".join(parts)
+
 out = []
 def ln(s=""): out.append(s)
 
 ln(f"! Title: Chris Lowles' Auto Regenerating Filterlist")
-ln(f"! Description: Blocks YouTube content via channel id, video id, broad keywords, among other things (in the future)")
+ln(f"! Description: Blocks YouTube & YT Music content via channel id, video id, broad keywords, and static rules")
 ln(f"! Generated: {date.today().isoformat()}")
 ln()
 
 ln("! CHANNELS")
 ln()
 for cid in sorted(set(CHANNEL_IDS)):
+    # Standard YouTube
     ln(cosmetic(f':has(a[href*="/channel/{cid}"])'))
+    # YT Music
+    ln(ytm_cosmetic(f':has(a[href*="{cid}"])'))
 ln()
 
 ln("! VIDEOS")
 ln()
 for vid in VIDEO_IDS:
+    # Standard YouTube
     ln(cosmetic(f':has(a[href*="{vid}"])'))
     ln(f"||www.youtube.com/watch?v={vid}^")
+    # YT Music
+    ln(ytm_cosmetic(f':has(a[href*="{vid}"])'))
+    ln(f"||music.youtube.com/watch?v={vid}^")
 ln()
 
 ln("! BLOCKED KEYWORDS (title + channel name)")
 ln()
 for pattern, comment in KEYWORDS:
     ln(f"! {comment}")
+    # Standard YouTube
     ln(cosmetic(f":has(#video-title:has-text({pattern}))"))
     ln(cosmetic(f":has(#channel-name:has-text({pattern}))"))
+    # YT Music uses yt-formatted-string heavily for titles and artist names
+    ln(ytm_cosmetic(f":has(yt-formatted-string:has-text({pattern}))"))
     ln()
 
 # Append static filters if the file exists
@@ -102,9 +125,9 @@ with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
     f.write(result)
 
 # Re-calculated the total to include all viable rules (including from static.txt)
-total = sum(1 for l in out if l.startswith("www.youtube.com##") or l.startswith("||") or ("##" in l and not l.startswith("!")))
+total = sum(1 for l in out if l.startswith("www.youtube.com##") or l.startswith("music.youtube.com##") or l.startswith("||") or ("##" in l and not l.startswith("!")))
 
 print(f"Written {OUTPUT_FILE} ({total} rules)")
-print(f"Channels: {len(set(CHANNEL_IDS))}")
-print(f"Videos:   {len(VIDEO_IDS)} x 2 (cosmetic + network)")
-print(f"Keywords: {len(KEYWORDS)} x 2 (title + channel name)")
+print(f"Channels: {len(set(CHANNEL_IDS))} (Applied to YT & YTM)")
+print(f"Videos:   {len(VIDEO_IDS)} x 4 (YT/YTM Cosmetic + YT/YTM Network)")
+print(f"Keywords: {len(KEYWORDS)} x 3 (YT Title + YT Channel + YTM Formatted String)")
