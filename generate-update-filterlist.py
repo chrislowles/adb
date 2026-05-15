@@ -60,30 +60,52 @@ RENDERERS = [
 # YouTube Music Renderers
 YTM_RENDERERS = [
     "ytmusic-two-row-item-renderer",
-    "ytmusic-responsive-list-item-renderer"
+    "ytmusic-responsive-list-item-renderer",
 ]
 
-def yt_cosmetic(selector):
-    parts = [f"{r}{selector}" for r in RENDERERS]
-    return "www.youtube.com##" + ", ".join(parts)
-
-def ytm_cosmetic(selector):
-    parts = [f"{r}{selector}" for r in YTM_RENDERERS]
-    return "music.youtube.com##" + ", ".join(parts)
+def cosmetic(domain, renderers, selector):
+    parts = [f"{r}{selector}" for r in renderers]
+    return f"{domain}##" + ", ".join(parts)
 
 def main():
     out = []
     def ln(s=""): out.append(s)
 
-    # Deduplicate and sort lists to prevent duplicate rules and maintain order
-    unique_channels = sorted(set(CHANNEL_IDS))
-    unique_videos = sorted(set(VIDEO_IDS))
-    
-    # Remove duplicate keywords while preserving order
+    # Validate channel IDs (YouTube channel IDs start with UC and are 24 chars)
+    for cid in CHANNEL_IDS:
+        if not cid.startswith("UC") or len(cid) != 24:
+            print(f"Warning: channel ID may be malformed: {cid}", file=sys.stderr)
+
+    # Validate video IDs (YouTube video IDs are 11 chars)
+    for vid in VIDEO_IDS:
+        if len(vid) != 11:
+            print(f"Warning: video ID may be malformed: {vid}", file=sys.stderr)
+
+    # Deduplicate and sort, warning on any duplicates found
+    seen_channels = set()
+    unique_channels = []
+    for cid in sorted(CHANNEL_IDS):
+        if cid in seen_channels:
+            print(f"Warning: duplicate channel ID removed: {cid}", file=sys.stderr)
+        else:
+            unique_channels.append(cid)
+            seen_channels.add(cid)
+
+    seen_videos = set()
+    unique_videos = []
+    for vid in sorted(VIDEO_IDS):
+        if vid in seen_videos:
+            print(f"Warning: duplicate video ID removed: {vid}", file=sys.stderr)
+        else:
+            unique_videos.append(vid)
+            seen_videos.add(vid)
+
     unique_keywords = []
     seen_patterns = set()
     for pattern, comment in KEYWORDS:
-        if pattern not in seen_patterns:
+        if pattern in seen_patterns:
+            print(f"Warning: duplicate keyword pattern removed: {pattern}", file=sys.stderr)
+        else:
             unique_keywords.append((pattern, comment))
             seen_patterns.add(pattern)
 
@@ -95,20 +117,16 @@ def main():
     ln("! CHANNELS")
     ln()
     for cid in unique_channels:
-        # Standard YouTube
-        ln(yt_cosmetic(f':has(a[href*="/channel/{cid}"])'))
-        # YT Music
-        ln(ytm_cosmetic(f':has(a[href*="{cid}"])'))
+        ln(cosmetic("www.youtube.com", RENDERERS, f':has(a[href*="/channel/{cid}"])'))
+        ln(cosmetic("music.youtube.com", YTM_RENDERERS, f':has(a[href*="{cid}"])'))
     ln()
 
     ln("! VIDEOS")
     ln()
     for vid in unique_videos:
-        # Standard YouTube
-        ln(yt_cosmetic(f':has(a[href*="{vid}"])'))
+        ln(cosmetic("www.youtube.com", RENDERERS, f':has(a[href*="{vid}"])'))
         ln(f"||www.youtube.com/watch?v={vid}^")
-        # YT Music
-        ln(ytm_cosmetic(f':has(a[href*="{vid}"])'))
+        ln(cosmetic("music.youtube.com", YTM_RENDERERS, f':has(a[href*="{vid}"])'))
         ln(f"||music.youtube.com/watch?v={vid}^")
     ln()
 
@@ -116,29 +134,27 @@ def main():
     ln()
     for pattern, comment in unique_keywords:
         ln(f"! {comment}")
-        # Standard YouTube
-        ln(yt_cosmetic(f":has(#video-title:has-text({pattern}))"))
-        ln(yt_cosmetic(f":has(#channel-name:has-text({pattern}))"))
+        ln(cosmetic("www.youtube.com", RENDERERS, f":has(#video-title:has-text({pattern}))"))
+        ln(cosmetic("www.youtube.com", RENDERERS, f":has(#channel-name:has-text({pattern}))"))
         # YT Music uses yt-formatted-string heavily for titles and artist names
-        ln(ytm_cosmetic(f":has(yt-formatted-string:has-text({pattern}))"))
+        ln(cosmetic("music.youtube.com", YTM_RENDERERS, f":has(yt-formatted-string:has-text({pattern}))"))
         ln()
 
     # Append static filters if the file exists
     if os.path.exists("static.txt"):
         ln("! ------------------------------------------")
-        ln("! --- Included from static.txt  ---")
+        ln("! --- Included from static.txt           ---")
         ln("! ------------------------------------------")
         ln()
         try:
             with open("static.txt", "r", encoding="utf-8") as pf:
                 for line in pf:
-                    # Strip newline characters so we don't end up with double spacing
-                    out.append(line.rstrip('\n'))
+                    out.append(line.rstrip('\r\n'))
         except IOError as e:
             print(f"Error reading static.txt: {e}", file=sys.stderr)
 
-    result = "\n".join(out)
-    
+    result = "\n".join(out) + "\n"
+
     try:
         with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
             f.write(result)
@@ -146,8 +162,8 @@ def main():
         print(f"Error writing to {OUTPUT_FILE}: {e}", file=sys.stderr)
         sys.exit(1)
 
-    # Re-calculated the total to include all viable rules (including from static.txt)
-    total = sum(1 for l in out if l.startswith("www.youtube.com##") or l.startswith("music.youtube.com##") or l.startswith("||") or ("##" in l and not l.startswith("!")))
+    # Count all active (non-comment, non-blank) rules
+    total = sum(1 for l in out if l and not l.startswith("!"))
 
     print(f"Written {OUTPUT_FILE} ({total} rules)")
     print(f"Channels: {len(unique_channels)} (Applied to YT & YTM)")
