@@ -118,14 +118,14 @@ def main():
     ln(f"! Generated: {date.today().isoformat()}")
     ln()
 
-    ln("! CHANNELS")
+    ln("! YT/YTM CHANNELS")
     ln()
     for cid in unique_channels:
         ln(cosmetic("www.youtube.com", RENDERERS, f':has(a[href*="/channel/{cid}"])'))
         ln(cosmetic("music.youtube.com", YTM_RENDERERS, f':has(a[href*="{cid}"])'))
     ln()
 
-    ln("! VIDEOS")
+    ln("! YT/YTM VIDEOS")
     ln()
     for vid in unique_videos:
         ln(cosmetic("www.youtube.com", RENDERERS, f':has(a[href*="{vid}"])'))
@@ -134,7 +134,7 @@ def main():
         ln(f"||music.youtube.com/watch?v={vid}^")
     ln()
 
-    ln("! BLOCKED KEYWORDS (title + channel name)")
+    ln("! YT/YTM KEYWORDS (title + channel name)")
     ln()
     for pattern, comment in unique_keywords:
         ln(f"! {comment}")
