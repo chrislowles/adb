@@ -47,7 +47,6 @@ from urllib.parse import urlparse
 from datetime import date
 
 OUTPUT_FILE = "filterlist.txt"
-LIBREDIRECT_JSON_URL = "https://raw.githubusercontent.com/libredirect/instances/refs/heads/main/data.json"
 
 # Standard YouTube Renderers
 RENDERERS = [
@@ -149,23 +148,23 @@ def main():
     ln("! Auto-fetched from LibRedirect instances list")
     ln()
     try:
-        req = urllib.request.Request(LIBREDIRECT_JSON_URL)
+        req = urllib.request.Request("https://raw.githubusercontent.com/libredirect/instances/refs/heads/main/data.json")
         with urllib.request.urlopen(req) as response:
             data = json.loads(response.read().decode('utf-8'))
-            bw_urls = data.get("breezeWiki", {}).get("clearnet", [])
-            bw_domains = []
+            lr_urls = data.get("breezeWiki", {}).get("clearnet", [])
+            bw_instances = []
             
-            for url in bw_urls:
+            for url in lr_urls:
                 parsed = urlparse(url)
                 if parsed.netloc:
-                    bw_domains.append(parsed.netloc)
+                    bw_instances.append(parsed.netloc)
             
-            if bw_domains:
-                domain_prefix = ",".join(bw_domains)
+            if bw_instances:
+                domain_prefix = ",".join(bw_instances)
                 ln(f"{domain_prefix}##.spoiler, .notice, .pull-quote::before, .bw-theme__select, .bw-top-banner")
                 ln(f"{domain_prefix}##.page:style(max-width: 100vw !important; margin: 0 auto !important;)")
             else:
-                print("Warning: No BreezeWiki domains found in libredirect data.", file=sys.stderr)
+                print("Warning: No BreezeWiki instances found in libredirect data.", file=sys.stderr)
     except Exception as e:
         print(f"Error fetching or parsing LibRedirect instances: {e}", file=sys.stderr)
         ln("! [Error generating BreezeWiki rules]")
