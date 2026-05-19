@@ -143,33 +143,6 @@ def main():
         ln(cosmetic("music.youtube.com", YTM_RENDERERS, f":has(yt-formatted-string:has-text({pattern}))"))
         ln()
 
-    # BreezeWiki dynamic fetching
-    ln("! BREEZEWIKI TWEAKS")
-    ln("! Auto-fetched from LibRedirect instances list")
-    ln()
-    try:
-        req = urllib.request.Request("https://raw.githubusercontent.com/libredirect/instances/refs/heads/main/data.json")
-        with urllib.request.urlopen(req) as response:
-            data = json.loads(response.read().decode('utf-8'))
-            lr_urls = data.get("breezeWiki", {}).get("clearnet", [])
-            bw_instances = []
-            
-            for url in lr_urls:
-                parsed = urlparse(url)
-                if parsed.netloc:
-                    bw_instances.append(parsed.netloc)
-            
-            if bw_instances:
-                domain_prefix = ",".join(bw_instances)
-                ln(f"{domain_prefix}##.spoiler, .notice, .pull-quote::before, .bw-theme__select, .bw-top-banner")
-                ln(f"{domain_prefix}##.page:style(max-width: 100vw !important; margin: 0 auto !important;)")
-            else:
-                print("Warning: No BreezeWiki instances found in libredirect data.", file=sys.stderr)
-    except Exception as e:
-        print(f"Error fetching or parsing LibRedirect instances: {e}", file=sys.stderr)
-        ln("! [Error generating BreezeWiki rules]")
-    ln()
-
     # Append static filters if the file exists
     if os.path.exists("static.txt"):
         ln("! ------------------------------------------")
