@@ -13,6 +13,16 @@ www.youtube.com##ytd-rich-section-renderer h2:has-text(/(YouTube Playables|Lates
 www.youtube.com##ytd-shelf-renderer.style-scope:has(span:has-text(/(For you|Explore more|People also watched|Previously watched|From related searches|New for you|Channels new to you)/i))
 !! Redirect Shorts to Watch Page
 ||youtube.com/shorts/*$uritransform=/shorts\/(.*)/watch?v=$1/
+!! Front Page to Subfeed
+||www.youtube.com/$uritransform=/^(https:\/\/www\.youtube\.com)\/?$/$1\/feed\/subscriptions/
+!! Zero Out YT Timestamps
+||www.youtube.com/watch^$uritransform=/([?&])t=\d+/$1t=0/
+
+! Bandcamp
+!! Hide Follow/Mailing List Modal
+bandcamp.com##.mailing-list-opt-in
+bandcamp.com##.ui-widget-overlay
+bandcamp.com##body:style(overflow: visible !important;)
 
 ! Something Awful
 forums.somethingawful.com###unregistered
