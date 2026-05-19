@@ -41,9 +41,13 @@ KEYWORDS = [
 
 import os
 import sys
+import json
+import urllib.request
+from urllib.parse import urlparse
 from datetime import date
 
 OUTPUT_FILE = "filterlist.txt"
+LIBREDIRECT_JSON_URL = "https://raw.githubusercontent.com/libredirect/instances/refs/heads/main/data.json"
 
 # Standard YouTube Renderers
 RENDERERS = [
@@ -139,6 +143,33 @@ def main():
         # YT Music uses yt-formatted-string heavily for titles and artist names
         ln(cosmetic("music.youtube.com", YTM_RENDERERS, f":has(yt-formatted-string:has-text({pattern}))"))
         ln()
+
+    # BreezeWiki dynamic fetching
+    ln("! BREEZEWIKI TWEAKS")
+    ln("! Auto-fetched from LibRedirect instances list")
+    ln()
+    try:
+        req = urllib.request.Request(LIBREDIRECT_JSON_URL)
+        with urllib.request.urlopen(req) as response:
+            data = json.loads(response.read().decode('utf-8'))
+            bw_urls = data.get("breezeWiki", {}).get("clearnet", [])
+            bw_domains = []
+            
+            for url in bw_urls:
+                parsed = urlparse(url)
+                if parsed.netloc:
+                    bw_domains.append(parsed.netloc)
+            
+            if bw_domains:
+                domain_prefix = ",".join(bw_domains)
+                ln(f"{domain_prefix}##.spoiler, .notice, .pull-quote::before, .bw-theme__select, .bw-top-banner")
+                ln(f"{domain_prefix}##.page:style(max-width: 100vw !important; margin: 0 auto !important;)")
+            else:
+                print("Warning: No BreezeWiki domains found in libredirect data.", file=sys.stderr)
+    except Exception as e:
+        print(f"Error fetching or parsing LibRedirect instances: {e}", file=sys.stderr)
+        ln("! [Error generating BreezeWiki rules]")
+    ln()
 
     # Append static filters if the file exists
     if os.path.exists("static.txt"):
