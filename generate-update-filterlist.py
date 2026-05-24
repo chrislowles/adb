@@ -50,17 +50,44 @@ OUTPUT_FILE = "filterlist.txt"
 
 # Standard YouTube Renderers
 RENDERERS = [
+    # Video renderers
     "ytd-rich-item-renderer",
     "ytd-video-renderer",
     "ytd-compact-video-renderer",
     "ytd-grid-video-renderer",
     "ytd-playlist-video-renderer",
-    "ytd-channel-renderer",
     "ytd-reel-item-renderer",
     "ytd-reel-video-renderer",
+    "ytd-video-card-renderer",
+    "ytd-watch-card-compact-video-renderer",
+    
+    # Playlist renderers
+    "ytd-playlist-renderer",
+    "ytd-grid-playlist-renderer",
+    "ytd-compact-playlist-renderer",
+    "ytd-playlist-panel-video-renderer",
+    
+    # Channel renderers
+    "ytd-channel-renderer",
+    "ytd-grid-channel-renderer",
+    "ytd-mini-channel-renderer",
+    "ytd-compact-channel-renderer",
+    
+    # Mix / Radio renderers
+    "ytd-radio-renderer",
+    "ytd-grid-radio-renderer",
+    "ytd-compact-radio-renderer",
+    
+    # Sections and new view models
+    "ytd-shelf-renderer",
+    "ytd-rich-shelf-renderer",
+    "ytd-channel-featured-video-renderer",
+    "ytd-channel-video-player-renderer",
+    "yt-lockup-view-model",
+    "yt-video-with-context-renderer"
 ]
 
-# YouTube Music Renderers
+# YT Music Renderers
 YTM_RENDERERS = [
     "ytmusic-two-row-item-renderer",
     "ytmusic-responsive-list-item-renderer",
@@ -124,6 +151,9 @@ def main():
     ln()
     for cid in unique_channels:
         ln(cosmetic("www.youtube.com", RENDERERS, f':has(a[href*="/channel/{cid}"])'))
+        # Hide whole channel/playlist pages if they explicitly link to the blocked ID in their headers
+        ln(cosmetic("www.youtube.com", ["ytd-browse[page-subtype='channels']"], f':has(ytd-c4-tabbed-header-renderer a[href*="{cid}"])'))
+        ln(cosmetic("www.youtube.com", ["ytd-browse[page-subtype='channels']"], f':has(ytd-page-header-renderer a[href*="{cid}"])'))
         ln(cosmetic("music.youtube.com", YTM_RENDERERS, f':has(a[href*="{cid}"])'))
     ln()
 
@@ -141,7 +171,16 @@ def main():
     for pattern, comment in unique_keywords:
         ln(f"! {comment}")
         ln(cosmetic("www.youtube.com", RENDERERS, f":has(#video-title:has-text({pattern}))"))
+        ln(cosmetic("www.youtube.com", RENDERERS, f":has(#title:has-text({pattern}))"))
         ln(cosmetic("www.youtube.com", RENDERERS, f":has(#channel-name:has-text({pattern}))"))
+        ln(cosmetic("www.youtube.com", RENDERERS, f":has(yt-formatted-string:has-text({pattern}))"))
+        ln(cosmetic("www.youtube.com", RENDERERS, f":has(.yt-core-attributed-string:has-text({pattern}))"))
+        
+        # Block whole channel/playlist pages if their header matches the keyword
+        ln(cosmetic("www.youtube.com", ["ytd-browse[page-subtype='channels']"], f":has(ytd-c4-tabbed-header-renderer:has-text({pattern}))"))
+        ln(cosmetic("www.youtube.com", ["ytd-browse[page-subtype='channels']"], f":has(ytd-page-header-renderer:has-text({pattern}))"))
+        ln(cosmetic("www.youtube.com", ["ytd-browse[page-subtype='playlist']"], f":has(ytd-playlist-header-renderer:has-text({pattern}))"))
+
         # YT Music uses yt-formatted-string heavily for titles and artist names
         ln(cosmetic("music.youtube.com", YTM_RENDERERS, f":has(yt-formatted-string:has-text({pattern}))"))
         ln()
@@ -174,7 +213,7 @@ def main():
     print(f"Written {OUTPUT_FILE} ({total} rules)")
     print(f"Channels: {len(unique_channels)} (Applied to YT & YTM)")
     print(f"Videos:   {len(unique_videos)} x 4 (YT/YTM Cosmetic + YT/YTM Network)")
-    print(f"Keywords: {len(unique_keywords)} x 3 (YT Title + YT Channel + YTM Formatted String)")
+    print(f"Keywords: {len(unique_keywords)} x 8 (Various Title/Channel combinations)")
 
 if __name__ == "__main__":
     main()
