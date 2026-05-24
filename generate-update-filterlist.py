@@ -14,27 +14,28 @@ CHANNEL_IDS = []
 VIDEO_IDS = []
 
 # YOUTUBE/YTM KEYWORDS
-# Format: ("regex_pattern", "human-readable comment")
-# Patterns are matched against both video titles and channel names.
+# Format: ("regex_pattern")
+# Patterns are matched against both video titles and channel names (other contexts too)
 # Use /regex/i syntax (case-insensitive). Consolidate variants into one entry.
 KEYWORDS = [
-    ("/Charlie Kirk/i", "Charlie Kirk"),
-    ("/Pirate\\s?Software/i", "Pirate Software / PirateSoftware"),
-    ("/Scott Galloway/i", "Scott Galloway"),
-    ("/Turk(?:ey|y) Tom/i", "Turkey Tom / Turky Tom"),
-    ("/Omarchy/i", "Omarchy"),
-    ("/Bill Maher/i", "Bill Maher"),
-    ("/Nerd City/i", "Nerd City"),
-    ("/Karl Jobst/i", "Karl Jobst"),
-    ("/SomeOrdinary(?:Gamers|Podcast)/i", "SomeOrdinaryGamers / SomeOrdinaryPodcast"),
+    ("/Charlie Kirk/i"),
+    ("/Clavicular/i"),
+    ("/Pirate\\s?Software/i"),
+    ("/Scott Galloway/i"),
+    ("/Turk(?:ey|y) Tom/i"),
+    ("/Omarchy/i"),
+    ("/Bill Maher/i"),
+    ("/Nerd City/i"),
+    ("/Karl Jobst/i"),
+    ("/SomeOrdinary(?:Gamers|Podcast)/i"),
     ("/Asmongold/i", "Asmongold"),
-    ("/h3(?:h3|\\s*podcast)/i", "h3h3 / h3 podcast"),
-    ("/(?:Hila|Ethan) Klein/i", "Hila Klein / Ethan Klein"),
-    ("/\\d?kliksphilip/i", "kliksphilip / 2kliksphilip / 3kliksphilip"),
-    ("/Xanderhal/i", "Xanderhal"),
-    ("/mrwhosetheboss/i", "mrwhosetheboss"),
-    ("/Evan Carmichael/i", "Evan Carmichael"),
-    ("/Vaush/i", "Vaush"),
+    ("/h3(?:h3|\\s*podcast)/i"),
+    ("/(?:Hila|Ethan) Klein/i"),
+    ("/\\d?kliksphilip/i"),
+    ("/Xanderhal/i"),
+    ("/mrwhosetheboss/i"),
+    ("/Evan Carmichael/i"),
+    ("/Vaush/i"),
 ]
 
 # Generator — no need to edit below this line
@@ -135,11 +136,11 @@ def main():
 
     unique_keywords = []
     seen_patterns = set()
-    for pattern, comment in KEYWORDS:
+    for pattern in KEYWORDS:
         if pattern in seen_patterns:
             print(f"Warning: duplicate keyword pattern removed: {pattern}", file=sys.stderr)
         else:
-            unique_keywords.append((pattern, comment))
+            unique_keywords.append((pattern))
             seen_patterns.add(pattern)
 
     ln(f"! Title: Chris Lowles' Auto Regenerating Filterlist")
@@ -168,8 +169,7 @@ def main():
 
     ln("! YT/YTM KEYWORDS (title + channel name)")
     ln()
-    for pattern, comment in unique_keywords:
-        ln(f"! {comment}")
+    for pattern in unique_keywords:
         ln(cosmetic("www.youtube.com", RENDERERS, f":has(#video-title:has-text({pattern}))"))
         ln(cosmetic("www.youtube.com", RENDERERS, f":has(#title:has-text({pattern}))"))
         ln(cosmetic("www.youtube.com", RENDERERS, f":has(#channel-name:has-text({pattern}))"))
