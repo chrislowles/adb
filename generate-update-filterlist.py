@@ -67,8 +67,11 @@ YTM_RENDERERS = [
 ]
 
 def cosmetic(domain, renderers, selector):
-    parts = [f"{r}{selector}" for r in renderers]
-    return f"{domain}##" + ", ".join(parts)
+    # Each renderer on its own line — uBlock Origin does not support comma-separated
+    # procedural cosmetic filters (those using :has-text(), etc.). A single long
+    # comma-joined line works for plain CSS selectors but is silently broken for
+    # procedural ones, causing keyword filters to do nothing.
+    return "\n".join(f"{domain}##{r}{selector}" for r in renderers)
 
 def main():
     out = []
@@ -166,7 +169,7 @@ def main():
         sys.exit(1)
 
     # Count all active (non-comment, non-blank) rules
-    total = sum(1 for l in out if l and not l.startswith("!"))
+    total = sum(1 for l in result.splitlines() if l and not l.startswith("!"))
 
     print(f"Written {OUTPUT_FILE} ({total} rules)")
     print(f"Channels: {len(unique_channels)} (Applied to YT & YTM)")
