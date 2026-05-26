@@ -18,6 +18,7 @@ VIDEO_IDS = []
 # Patterns are matched against both video titles and channel names (other contexts too)
 # Use /regex/i syntax (case-insensitive). Consolidate variants into one entry.
 KEYWORDS = [
+    ("/Brad Taste/i"),
     ("/Charlie Kirk/i"),
     ("/Clavicular/i"),
     ("/Pirate\\s?Software/i"),
