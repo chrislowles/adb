@@ -11,7 +11,9 @@ CHANNEL_IDS = []
 
 # YOUTUBE/YTM VIDEO IDs
 # Cosmetic hide + hard network block. Remove the ||www.youtube.com line in the template below if you only want feed-hiding without blocking direct links.
-VIDEO_IDS = []
+VIDEO_IDS = [
+    "5XwYPQ9Un1A"
+]
 
 # YOUTUBE/YTM KEYWORDS
 # Format: ("regex_pattern")
