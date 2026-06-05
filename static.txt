@@ -67,11 +67,9 @@ tunein.com##.ad-cell-module__container___phfcP
 !! Blocks the "Sign in with Google" popup on third-party sites
 ||accounts.google.com/gsi/*$xhr,script,3p
 
-! x.com (fmr. Twitter)
-! "Who to follow"
-x.com##[aria-label="Who to follow"]:upward(2)
-! X Premium upsell banner
-x.com##[aria-label="Subscribe to Premium"]:upward(2)
+! simpcity.cr
+! disable all third-party scripts
+*$script,third-party,domain=simpcity.cr
 
 ! Random
 etsy.com##li:has(h2[id^="ad-listing"])
