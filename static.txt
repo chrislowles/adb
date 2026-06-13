@@ -13,35 +13,10 @@ www.youtube.com##ytd-rich-section-renderer h2:has-text(/(YouTube Playables|Lates
 www.youtube.com##ytd-shelf-renderer.style-scope:has(span:has-text(/(For you|Explore more|People also watched|Previously watched|From related searches|New for you|Channels new to you)/i))
 !! YT Home - Hide Mixes
 youtube.com##ytd-rich-item-renderer:has([href*="start_radio=1"])
-!! YT Sidebar - Hide Mixes
-youtube.com##ytd-compact-radio-renderer, :is(#related yt-lockup-view-model,ytd-compact-video-renderer):has([href*="&start_radio=1"])
-!! YT Search - Hide Mixes
-youtube.com##ytd-radio-renderer, :is(ytd-search yt-lockup-view-model,ytd-video-renderer[is-search]):has([href*="&start_radio=1"][aria-haspopup])
 !! YT Player - Hide Mixes in Video End Cards
 youtube.com##.ytp-videowall-still[data-is-mix="true"]
-!! YT - Homepage and Subscriptions (Grid View) - Hide the Shorts section
-youtube.com##[is-shorts]
-!! YT - Subscriptions - Hide Shorts - Grid View
-www.youtube.com##ytd-browse[page-subtype="subscriptions"] ytd-grid-video-renderer:has([overlay-style="SHORTS"],[href^="/shorts/"])
-!! YT - Subscriptions - Hide Shorts - List View
-www.youtube.com##ytd-browse[page-subtype="subscriptions"] ytd-video-renderer:has([overlay-style="SHORTS"],[href^="/shorts/"])
-!! YT - Subscriptions - New Layout - Hide Shorts
-www.youtube.com##ytd-browse[page-subtype="subscriptions"] ytd-rich-item-renderer:has([overlay-style="SHORTS"],[href^="/shorts/"])
-!! YT consent
-youtube.com##+js(set, ytInitialData.topbar.desktopTopbarRenderer.interstitial.consentBumpRenderer.forceConsent, false)
-youtube.com##+js(json-prune, [].response.topbar.desktopTopbarRenderer.interstitial.consentBumpRenderer)
-youtube.com##+js(json-prune, topbar.desktopTopbarRenderer.interstitial.consentBumpRenderer)
-!! 2021-12-01: When specific videos redirect persistently to consent page try this filter (discussion: https://redd.it/r3ec5x ):
-youtube.com##+js(set, ytInitialData.onResponseReceivedEndpoints, undefined)
-!! 2021-12-14 YT consent v2 https://github.com/uBlockOrigin/uAssets/issues/7636#issuecomment-992858673
-youtube.com##+js(set, ytInitialData.topbar.desktopTopbarRenderer.interstitial.consentBumpV2Renderer, undefined)
-youtube.com##+js(json-prune, [].response.overlay.consentBumpV2Renderer topbar.desktopTopbarRenderer.interstitial.consentBumpV2Renderer overlay.consentBumpV2Renderer response.overlay.consentBumpV2Renderer)
-!! 2022-10-16 when navigating directly to #shorts
-youtube.com##+js(set, ytInitialData.desktopTopbar.desktopTopbarRenderer.interstitial.consentBumpV2Renderer, undefined)
 !! Animated hover previews in the feed (GIF-like autoplay thumbnails on hover — stops fetch + decode)
 www.youtube.com##ytd-moving-thumbnail-renderer
-!! Pause overlay (loads & fetches recommendations when you pause a video)
-www.youtube.com##.ytp-pause-overlay-container
 !! Seek bar hover preview (loads inline video previews when hovering over the progress bar)
 www.youtube.com##.ytp-inline-preview-ui
 !! YouTube Premium promo bar
