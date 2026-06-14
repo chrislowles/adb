@@ -31,10 +31,6 @@ bandcamp.com##body:style(overflow: visible !important;)
 ! Something Awful
 forums.somethingawful.com###unregistered
 
-! coomer.su/kemono.su (May break soon, look into updating this)
-coomer.su##[href="https://v6.realxxx.com/19b738ca-40b6-4224-bff2-ec0bc7dee606"]:upward(aside)
-kemono.su##[href="https://v6.realxxx.com/b91ed4ea-3115-4afa-aaae-560bc05a70c3"]:upward(aside)
-
 ! TuneIn (May break soon, look into updating this)
 tunein.com##.ad-cell-module__container___phfcP
 
@@ -42,15 +38,17 @@ tunein.com##.ad-cell-module__container___phfcP
 !! Blocks the "Sign in with Google" popup on third-party sites
 ||accounts.google.com/gsi/*$xhr,script,3p
 
-! simpcity.cr
-! disable all third-party scripts
-*$script,third-party,domain=simpcity.cr
-
 ! Random
 etsy.com##li:has(h2[id^="ad-listing"])
 forbes.com###forbes-dv
 fandom.com##.featured-video__wrapper
 redgifs.com##.Video-OverLayer
 ||gumroad.com^$removeparam=layout
-www.myxxgirl.com###modal_screen
-www.myxxgirl.com###modal_content
+
+! coomer.su/kemono.su (May break soon, look into updating this)
+coomer.su##[href="https://v6.realxxx.com/19b738ca-40b6-4224-bff2-ec0bc7dee606"]:upward(aside)
+kemono.su##[href="https://v6.realxxx.com/b91ed4ea-3115-4afa-aaae-560bc05a70c3"]:upward(aside)
+
+! simpcity.cr
+! disable all third-party scripts
+*$script,third-party,domain=simpcity.cr
