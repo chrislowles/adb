@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """
 Filterlist generator.
-Edit the three lists below, then run: python3 generate-update-filterlist.py
-Output: filterlist.txt
+Edit the lists below, then run: python3 generate-update-filterlist.py
+Output: filterlist.txt in generated branch
 """
 
 # YOUTUBE/YTM CHANNEL IDs
 # Find via: www.youtube.com/channel/<ID>
+# Hardcoded, unchangable variable though may want to also use handle and plain-text
 CHANNEL_IDS = []
 
 # YOUTUBE/YTM VIDEO IDs
@@ -18,7 +19,7 @@ VIDEO_IDS = [
 # YOUTUBE/YTM KEYWORDS
 # Format: ("regex_pattern")
 # Patterns are matched against both video titles and channel names (other contexts too)
-# Use /regex/i syntax (case-insensitive). Consolidate variants into one entry.
+# Use /regex/i syntax (case-insensitive). Consolidate variants into one entry. People loooooove misspelling.
 KEYWORDS = [
     ("/Brad Taste/i"),
     ("/Charlie Kirk/i"),
@@ -41,16 +42,38 @@ KEYWORDS = [
     ("/Vaush/i"),
 ]
 
+# EXTERNAL FILTER LIST SOURCES
+# Full third-party filterlists, fetched fresh on every run and merged into the output verbatim (after blank-line stripping).
+# URLs sourced from uBlock Origin's assets.json: https://github.com/gorhill/uBlock/blob/master/assets/assets.json
+# Format: ("Human-readble name", "https://url/to/list.txt")
+EXTERNAL_SOURCES = [
+    ("uBlock filters – Ads", "https://ublockorigin.github.io/uAssets/filters/filters.txt"),                              # ublock-filters
+    ("uBlock filters – Badware risks", "https://ublockorigin.github.io/uAssets/filters/badware.txt"),                    # ublock-badware
+    ("uBlock filters – Privacy", "https://ublockorigin.github.io/uAssets/filters/privacy.txt"),                          # ublock-privacy
+    ("uBlock filters – Quick fixes", "https://ublockorigin.github.io/uAssets/filters/quick-fixes.txt"),                  # ublock-quick-fixes
+    ("uBlock filters – Unbreak", "https://ublockorigin.github.io/uAssets/filters/unbreak.txt"),                          # ublock-unbreak
+    ("EasyList", "https://ublockorigin.github.io/uAssets/thirdparties/easylist.txt"),                                    # easylist
+    ("EasyPrivacy", "https://ublockorigin.github.io/uAssets/thirdparties/easyprivacy.txt"),                              # easyprivacy
+    ("AdGuard/uBO – URL Tracking Protection", "https://ublockorigin.github.io/uAssets/filters/privacy-removeparam.txt"), # adguard-spyware-url
+    ("Block Outsider Intrusion into LAN", "https://ublockorigin.github.io/uAssets/filters/lan-block.txt"),               # block-lan
+    ("Online Malicious URL Blocklist", "https://malware-filter.gitlab.io/urlhaus-filter/urlhaus-filter-ag-online.txt"), # urlhaus-1
+    ("Phishing URL Blocklist", "https://malware-filter.gitlab.io/phishing-filter/phishing-filter.txt"),                  # curben-phishing
+    ("Peter Lowe's Ad and tracking server list", "https://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=1&mimetype=plaintext"), # plowe-0
+    ("Dan Pollock's hosts file", "https://someonewhocares.org/hosts/hosts"),                                             # dpollock-0
+]
+
 # Generator — no need to edit below this line
 
 import os
 import sys
 import json
 import urllib.request
+import urllib.error
 from urllib.parse import urlparse
 from datetime import date
 
 OUTPUT_FILE = "filterlist.txt"
+EXTERNAL_SOURCE_TIMEOUT = 15 # seconds, per source
 
 # Standard YouTube Renderers
 RENDERERS = [
@@ -104,6 +127,37 @@ def cosmetic(domain, renderers, selector):
     # procedural ones, causing keyword filters to do nothing.
     return "\n".join(f"{domain}##{r}{selector}" for r in renderers)
 
+def fetch_external_filterlist(name, url, timeout=EXTERNAL_SOURCE_TIMEOUT):
+    """
+    Download a single external filterlist.
+    Returns a list of non-empty, newline-stripped lines, or None if the
+    fetch/decode failed. Failures are logged as warnings, not raised —
+    one dead source shouldn't break the whole build.
+    """
+    req = urllib.request.Request(
+        url,
+        headers={"User-Agent": "Mozilla/5.0 (compatible; filterlist-generator)"}
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            raw = resp.read()
+    except (urllib.error.URLError, OSError) as e:
+        print(f"Warning: failed to fetch external source '{name}' ({url}): {e}", file=sys.stderr)
+        return None
+
+    try:
+        text = raw.decode("utf-8")
+    except UnicodeDecodeError as e:
+        print(f"Warning: failed to decode external source '{name}' ({url}): {e}", file=sys.stderr)
+        return None
+
+    lines = [l.rstrip('\r\n') for l in text.splitlines() if l.strip()]
+    if not lines:
+        print(f"Warning: external source '{name}' ({url}) returned no usable lines", file=sys.stderr)
+        return None
+
+    return lines
+
 def main():
     out = []
     def ln(s=""): out.append(s)
@@ -147,7 +201,7 @@ def main():
             seen_patterns.add(pattern)
 
     ln(f"! Title: Chris Lowles' Auto Regenerating Filterlist")
-    ln(f"! Description: Blocks YouTube & YT Music content via channel id, video id, broad keywords, and static rules")
+    ln(f"! Description: Blocks YouTube & YT Music content via channel id, video id, broad keywords. Blocks static rules and imports preferred sources.")
     ln(f"! Generated: {date.today().isoformat()}")
     ln()
 
@@ -201,6 +255,26 @@ def main():
         except IOError as e:
             print(f"Error reading static.txt: {e}", file=sys.stderr)
 
+    # Fetch and append external filter list sources
+    fetched_count = 0
+    external_line_count = 0
+    if EXTERNAL_SOURCES:
+        ln("! ------------------------------------------")
+        ln("! --- External sources                    ---")
+        ln("! ------------------------------------------")
+        ln()
+        for name, url in EXTERNAL_SOURCES:
+            lines = fetch_external_filterlist(name, url)
+            if lines is None:
+                ln(f"! --- {name} ({url}) — FAILED TO FETCH, skipped ---")
+                ln()
+                continue
+            ln(f"! --- {name} ({url}) — {len(lines)} lines ---")
+            out.extend(lines)
+            ln()
+            fetched_count += 1
+            external_line_count += len(lines)
+
     result = "\n".join(out) + "\n"
 
     try:
@@ -217,6 +291,8 @@ def main():
     print(f"Channels: {len(unique_channels)} (Applied to YT & YTM)")
     print(f"Videos:   {len(unique_videos)} x 4 (YT/YTM Cosmetic + YT/YTM Network)")
     print(f"Keywords: {len(unique_keywords)} x 8 (Various Title/Channel combinations)")
+    if EXTERNAL_SOURCES:
+        print(f"External: {fetched_count}/{len(EXTERNAL_SOURCES)} source(s) fetched ({external_line_count} lines)")
 
 if __name__ == "__main__":
     main()
