@@ -3,6 +3,61 @@
 ||cyberdrop.me^
 ||nytimes.com^
 
+! Murdoch / News Corp / Fox Corporation Outlets
+||newscorp.com^
+||newscorpaustralia.com^
+||wsj.com^
+||thesun.co.uk^
+||thetimes.co.uk^
+||thetimes.com^
+||nypost.com^
+||theaustralian.com.au^
+||heraldsun.com.au^
+||dailytelegraph.com.au^
+||couriermail.com.au^
+||adelaidenow.com.au^
+||themercury.com.au^
+||ntnews.com.au^
+||goldcoastbulletin.com.au^
+||townsvillebulletin.com.au^
+||cairnspost.com.au^
+||weeklytimesnow.com.au^
+||news.com.au^
+||realestate.com.au^
+||foxsports.com.au^
+||skynews.com.au^
+||barrons.com^
+||marketwatch.com^
+||mansionglobal.com^
+||fnlondon.com^
+||investors.com^
+||dowjones.com^
+||harpercollins.com^
+||harlequin.com^
+||storyful.com^
+||taste.com.au^
+||delicious.com.au^
+||vogue.com.au^
+||gq.com.au^
+||talk.tv^
+||talkradio.co.uk^
+||talksport.com^
+||virginradio.co.uk^
+||fox.com^
+||foxnews.com^
+||foxbusiness.com^
+||foxsports.com^
+||foxweather.com^
+||foxnation.com^
+||tubitv.com^
+||tmz.com^
+||outkick.com^
+||livenowfox.com^
+||mynetworktv.com^
+||myfoxhurricane.com^
+||foxnewsinternational.com^
+||bentoboxent.com^
+
 ! Deviantart
 deviantart.com###block-notice > .block-notice > .banner-wrap
 deviantart.com###block-notice > .block-notice
