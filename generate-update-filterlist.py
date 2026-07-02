@@ -6,9 +6,13 @@ Output: filterlist.txt in generated branch
 """
 
 # YOUTUBE/YTM CHANNEL IDs
-# Find via: www.youtube.com/channel/<ID>
-# Hardcoded, unchangable variable though may want to also use handle and plain-text
-CHANNEL_IDS = []
+# Valid (at least the first) means: www.youtube.com/channel/<ID> or youtube.com/@<HANDLE> or regular expression of the plain text content of a channels name
+# TODO: consider array name change to CHANNELS as a result of broadening scope of channel identifiers
+CHANNEL_IDS = [
+    "UCJ9AFB3thzz2nPJqJGhNjjA",
+    "UChwbfG8UvnLOJ_WgRiAaPBA"
+    #("channelid", "handle", "/plain text value/i")
+]
 
 # YOUTUBE/YTM VIDEO IDs
 # Cosmetic hide + hard network block. Remove the ||www.youtube.com line in the template below if you only want feed-hiding without blocking direct links.
@@ -17,7 +21,7 @@ VIDEO_IDS = [
 ]
 
 # YOUTUBE/YTM KEYWORDS
-# Format: ("regex_pattern")
+# Format (or format I hope to achieve: ("Human readable text", "regex_pattern")
 # Patterns are matched against both video titles and channel names (other contexts too)
 # Use /regex/i syntax (case-insensitive). Consolidate variants into one entry. People loooooove misspelling.
 KEYWORDS = [
