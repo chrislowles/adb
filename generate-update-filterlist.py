@@ -44,6 +44,8 @@ KEYWORDS = [
     ("/mrwhosetheboss/i"),
     ("/Evan Carmichael/i"),
     ("/Vaush/i"),
+    ("/Graham Platner/i"),
+    ("/Platner/i"),
 ]
 
 # Generator — no need to edit below this line
