@@ -36,7 +36,7 @@ KEYWORDS = [
     ("/Nerd City/i"),
     ("/Karl Jobst/i"),
     ("/SomeOrdinary(?:Gamers|Podcast)/i"),
-    ("/Asmongold/i", "Asmongold"),
+    ("/Asmongold/i"),
     ("/h3(?:h3|\\s*podcast)/i"),
     ("/(?:Hila|Ethan) Klein/i"),
     ("/\\d?kliksphilip/i"),
