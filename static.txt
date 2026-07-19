@@ -3,6 +3,12 @@
 ||cyberdrop.me^
 ||nytimes.com^
 
+! X.com
+! Auto-select "Following" Feed
+x.com##+js(trusted-click-element, [aria-label="Home timeline"]:has(> div:last-child > section > [aria-label="Timeline: Your Home Timeline"]) > div:first-child [role="tablist"] > div:nth-of-type(2) > [aria-selected="false"])
+! Hide the first tab button (checks for buttons without links - potential breakages?)
+x.com##[aria-label="Home timeline"] > div:first-child [role="tablist"] > div:first-child:not(:has([href]))
+
 ! Deviantart
 deviantart.com###block-notice > .block-notice > .banner-wrap
 deviantart.com###block-notice > .block-notice
