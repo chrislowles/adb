@@ -21,6 +21,12 @@ www.youtube.com##ytd-moving-thumbnail-renderer
 www.youtube.com##.ytp-inline-preview-ui
 !! YouTube Premium promo bar
 www.youtube.com##ytd-mealbar-promo-renderer
+!! Tracking Stuff
+$removeparam=feature,domain=youtube.com|youtu.be
+$removeparam=gclid,domain=youtube.com|youtu.be
+$removeparam=kw,domain=youtube.com|youtu.be
+$removeparam=si,domain=youtube.com|youtu.be
+$removeparam=pp,domain=youtube.com|youtu.be
 
 ! Bandcamp
 !! Hide Follow/Mailing List Modal
