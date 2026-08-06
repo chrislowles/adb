@@ -40,6 +40,8 @@ forums.somethingawful.com###unregistered
 ! Google
 !! Blocks the "Sign in with Google" popup on third-party sites
 ||accounts.google.com/gsi/*$xhr,script,3p
+!! Gemini in Google Drive
+drive.google.com##button[aria-label='Try Gemini']:upward(.gb_je.gb_ie)
 
 ! Random
 etsy.com##li:has(h2[id^="ad-listing"])
@@ -47,7 +49,19 @@ forbes.com###forbes-dv
 fandom.com##.featured-video__wrapper
 redgifs.com##.Video-OverLayer
 ||gumroad.com^$removeparam=layout
+www.myxxgirl.com###modal_screen
+www.myxxgirl.com###modal_content
 
 ! SimpCity
 ! disable all third-party scripts
 *$script,third-party,domain=simpcity.cr
+
+! Instagram
+!! Removes "Suggested for you", "Because you watched [...]" and similar in feed (Temperamental)
+! www.instagram.com##+js(json-prune, require.0.3.0.__bbox.require.0.3.1.__bbox.result.data.xdt_api__v1__feed__timeline__connection.edges.[-].node.explore_story.media.explore.title)
+! www.instagram.com##+js(json-prune-xhr-response, data.xdt_api__v1__feed__timeline__connection.edges.[-].node.explore_story.media.explore.title, , propsToMatch, url:/api/graphql)
+!! Removes "Threads" in feed
+! www.instagram.com##+js(json-prune, require.0.3.0.__bbox.require.0.3.1.__bbox.result.data.xdt_api__v1__feed__timeline__connection.edges.[-].node.bloks_netego.payload)
+! www.instagram.com##+js(json-prune-xhr-response, data.xdt_api__v1__feed__timeline__connection.edges.[-].node.bloks_netego.payload, , propsToMatch, url:/api/graphql)
+!! Hides "Threads" hyper-references
+www.instagram.com##a[href="https://www.threads.net/"]
