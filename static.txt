@@ -43,14 +43,18 @@ forums.somethingawful.com###unregistered
 !! Gemini in Google Drive
 drive.google.com##button[aria-label='Try Gemini']:upward(.gb_je.gb_ie)
 
-! Random
-etsy.com##li:has(h2[id^="ad-listing"])
-forbes.com###forbes-dv
-fandom.com##.featured-video__wrapper
-redgifs.com##.Video-OverLayer
-||gumroad.com^$removeparam=layout
-www.myxxgirl.com###modal_screen
-www.myxxgirl.com###modal_content
+! PayPal
+!! Hide "Pay in 4" / Pay Later messaging widget on 3rd-party merchant sites
+##paypal-messages
+##.paypal-messages
+##[data-pp-message]
+##iframe[name^="paypal_message_iframe"]
+##iframe[title*="PayPal Pay Later" i]
+!! Block the SDK request that renders the Pay Later messaging component
+||www.paypal.com/sdk/js?*components=*messages*$script
+||www.paypal.com/muse/api/pl/messages^$xhr
+!! Hide the "Pay in 4" funding option inside PayPal's own checkout
+www.paypal.com##[data-funding-source="paylater"]
 
 ! SimpCity
 ! disable all third-party scripts
@@ -65,3 +69,12 @@ www.myxxgirl.com###modal_content
 ! www.instagram.com##+js(json-prune-xhr-response, data.xdt_api__v1__feed__timeline__connection.edges.[-].node.bloks_netego.payload, , propsToMatch, url:/api/graphql)
 !! Hides "Threads" hyper-references
 www.instagram.com##a[href="https://www.threads.net/"]
+
+! Random
+etsy.com##li:has(h2[id^="ad-listing"])
+forbes.com###forbes-dv
+fandom.com##.featured-video__wrapper
+redgifs.com##.Video-OverLayer
+||gumroad.com^$removeparam=layout
+www.myxxgirl.com###modal_screen
+www.myxxgirl.com###modal_content
