@@ -6,16 +6,27 @@ Output: filterlist.txt in generated branch
 """
 
 # YOUTUBE/YTM CHANNEL IDs
-# Valid (at least the first) means: www.youtube.com/channel/<ID> or youtube.com/@<HANDLE> or regular expression of the plain text content of a channels name
-# TODO: consider array name change to CHANNELS as a result of broadening scope of channel identifiers
+# Each entry can be:
+#   "UCxxxxxxxxxxxxxxxxxxxxxx"                                -> channel ID only (old format, still works)
+#   ("UCxxxxxxxxxxxxxxxxxxxxxx", "@Handle")                   -> ID + handle
+#   ("UCxxxxxxxxxxxxxxxxxxxxxx", "@Handle", "/Channel Name/i") -> ID + handle + name regex
+#   (None, "@Handle", None)                                   -> handle only, no ID known yet
+#   (None, None, "/Channel Name/i")                           -> name regex only (weakest option -
+#                                                                 no href to match, relies on visible text)
+# Any field can be omitted from the tuple (it's padded with None) or set to None explicitly.
+# Whichever of id/handle/pattern are present are all used to build rules - more fields = more
+# robust blocking (a channel that renames itself is still caught by ID; a channel whose ID you
+# don't have yet is still caught by handle or name).
 CHANNEL_IDS = [
     "UCJ9AFB3thzz2nPJqJGhNjjA",
-    "UChwbfG8UvnLOJ_WgRiAaPBA"
-    #("channelid", "handle", "/plain text value/i")
+    "UChwbfG8UvnLOJ_WgRiAaPBA",
+    # ("UCxxxxxxxxxxxxxxxxxxxxxx", "@SomeHandle", "/Some Channel/i"),
 ]
 
 # YOUTUBE/YTM VIDEO IDs
-# Cosmetic hide + hard network block. Remove the ||www.youtube.com line in the template below if you only want feed-hiding without blocking direct links.
+# Cosmetic hide + hard network block (watch, shorts, embed, and youtu.be forms).
+# Remove specific ||...^ lines below in the template if you only want feed-hiding without
+# blocking direct/embedded links.
 VIDEO_IDS = [
     "5XwYPQ9Un1A"
 ]
@@ -71,24 +82,24 @@ RENDERERS = [
     "ytd-reel-video-renderer",
     "ytd-video-card-renderer",
     "ytd-watch-card-compact-video-renderer",
-    
+
     # Playlist renderers
     "ytd-playlist-renderer",
     "ytd-grid-playlist-renderer",
     "ytd-compact-playlist-renderer",
     "ytd-playlist-panel-video-renderer",
-    
+
     # Channel renderers
     "ytd-channel-renderer",
     "ytd-grid-channel-renderer",
     "ytd-mini-channel-renderer",
     "ytd-compact-channel-renderer",
-    
+
     # Mix / Radio renderers
     "ytd-radio-renderer",
     "ytd-grid-radio-renderer",
     "ytd-compact-radio-renderer",
-    
+
     # Sections and new view models
     "ytd-shelf-renderer",
     "ytd-rich-shelf-renderer",
@@ -104,6 +115,13 @@ YTM_RENDERERS = [
     "ytmusic-responsive-list-item-renderer",
 ]
 
+# Channel/playlist page header containers, used for whole-page hiding
+CHANNEL_PAGE_HEADERS = [
+    "ytd-c4-tabbed-header-renderer",
+    "ytd-page-header-renderer",
+]
+
+
 def cosmetic(domain, renderers, selector):
     # Each renderer on its own line — uBlock Origin does not support comma-separated
     # procedural cosmetic filters (those using :has-text(), etc.). A single long
@@ -111,30 +129,57 @@ def cosmetic(domain, renderers, selector):
     # procedural ones, causing keyword filters to do nothing.
     return "\n".join(f"{domain}##{r}{selector}" for r in renderers)
 
+
+def normalize_channel(entry):
+    """Accepts a plain channel-ID string (old format) or a (id, handle, pattern)
+    tuple/list with any field set to None or omitted, and returns a dict with
+    keys id/handle/pattern."""
+    if isinstance(entry, str):
+        return {"id": entry, "handle": None, "pattern": None}
+    if isinstance(entry, (tuple, list)):
+        vals = list(entry) + [None] * (3 - len(entry))
+        return {"id": vals[0], "handle": vals[1], "pattern": vals[2]}
+    raise ValueError(f"Invalid CHANNEL_IDS entry: {entry!r}")
+
+
 def main():
     out = []
     def ln(s=""): out.append(s)
 
-    # Validate channel IDs (YouTube channel IDs start with UC and are 24 chars)
-    for cid in CHANNEL_IDS:
-        if not cid.startswith("UC") or len(cid) != 24:
-            print(f"Warning: channel ID may be malformed: {cid}", file=sys.stderr)
+    # --- Normalize + validate channels ---
+    normalized_channels = [normalize_channel(e) for e in CHANNEL_IDS]
+
+    for ch in normalized_channels:
+        if not any((ch["id"], ch["handle"], ch["pattern"])):
+            print(f"Warning: channel entry has no id/handle/pattern, skipping: {ch}", file=sys.stderr)
+            continue
+        if ch["id"] and (not ch["id"].startswith("UC") or len(ch["id"]) != 24):
+            print(f"Warning: channel ID may be malformed: {ch['id']}", file=sys.stderr)
+        if ch["handle"] and not ch["handle"].startswith("@"):
+            print(f"Warning: handle should start with '@': {ch['handle']}", file=sys.stderr)
+        if ch["pattern"] and not (ch["pattern"].startswith("/") and ch["pattern"].rstrip("i").endswith("/")):
+            print(f"Warning: pattern doesn't look like /regex/i: {ch['pattern']}", file=sys.stderr)
 
     # Validate video IDs (YouTube video IDs are 11 chars)
     for vid in VIDEO_IDS:
         if len(vid) != 11:
             print(f"Warning: video ID may be malformed: {vid}", file=sys.stderr)
 
-    # Deduplicate and sort, warning on any duplicates found
-    seen_channels = set()
+    # Dedupe channels: prefer ID as the identity key, fall back to handle, then pattern
+    seen_channel_keys = set()
     unique_channels = []
-    for cid in sorted(CHANNEL_IDS):
-        if cid in seen_channels:
-            print(f"Warning: duplicate channel ID removed: {cid}", file=sys.stderr)
-        else:
-            unique_channels.append(cid)
-            seen_channels.add(cid)
+    for ch in normalized_channels:
+        if not any((ch["id"], ch["handle"], ch["pattern"])):
+            continue
+        key = ch["id"] or ch["handle"] or ch["pattern"]
+        if key in seen_channel_keys:
+            print(f"Warning: duplicate channel entry removed (key={key}): {ch}", file=sys.stderr)
+            continue
+        seen_channel_keys.add(key)
+        unique_channels.append(ch)
+    unique_channels.sort(key=lambda c: c["id"] or c["handle"] or c["pattern"])
 
+    # Dedupe and sort videos, warning on any duplicates found
     seen_videos = set()
     unique_videos = []
     for vid in sorted(VIDEO_IDS):
@@ -154,18 +199,43 @@ def main():
             seen_patterns.add(pattern)
 
     ln(f"! Title: Chris Lowles' Auto Regenerating Filterlist")
-    ln(f"! Description: Blocks YouTube & YT Music content via channel id, video id, broad keywords. Also blocks static rules.")
+    ln(f"! Description: Blocks YouTube & YT Music content via channel id/handle/name, video id, broad keywords. Also blocks static rules.")
     ln(f"! Generated: {date.today().isoformat()}")
     ln()
 
     ln("! YT/YTM CHANNELS")
     ln()
-    for cid in unique_channels:
-        ln(cosmetic("www.youtube.com", RENDERERS, f':has(a[href*="/channel/{cid}"])'))
-        # Hide whole channel/playlist pages if they explicitly link to the blocked ID in their headers
-        ln(cosmetic("www.youtube.com", ["ytd-browse[page-subtype='channels']"], f':has(ytd-c4-tabbed-header-renderer a[href*="{cid}"])'))
-        ln(cosmetic("www.youtube.com", ["ytd-browse[page-subtype='channels']"], f':has(ytd-page-header-renderer a[href*="{cid}"])'))
-        ln(cosmetic("music.youtube.com", YTM_RENDERERS, f':has(a[href*="{cid}"])'))
+    for ch in unique_channels:
+        href_frags = []
+        if ch["id"]:
+            href_frags.append(f'/channel/{ch["id"]}')
+        if ch["handle"]:
+            href_frags.append(f'/{ch["handle"]}')
+
+        # Feed-level hiding: any renderer linking to this channel's ID or handle.
+        # "i" flag makes the attribute match case-insensitive (handles are case-preserved
+        # in links but not meaningfully case-sensitive on YouTube's end).
+        for frag in href_frags:
+            ln(cosmetic("www.youtube.com", RENDERERS, f':has(a[href*="{frag}" i])'))
+            ln(cosmetic("music.youtube.com", YTM_RENDERERS, f':has(a[href*="{frag}" i])'))
+
+        # Feed-level hiding by channel name regex - also catches re-uploads/mirror
+        # channels using a name pattern even when you don't have their ID/handle.
+        if ch["pattern"]:
+            ln(cosmetic("www.youtube.com", RENDERERS, f":has(#channel-name:has-text({ch['pattern']}))"))
+            ln(cosmetic("www.youtube.com", RENDERERS, f":has(yt-formatted-string#channel-name:has-text({ch['pattern']}))"))
+            ln(cosmetic("music.youtube.com", YTM_RENDERERS, f":has(yt-formatted-string:has-text({ch['pattern']}))"))
+
+        # Whole channel/playlist page hiding
+        for header in CHANNEL_PAGE_HEADERS:
+            for frag in href_frags:
+                ln(cosmetic("www.youtube.com", ["ytd-browse[page-subtype='channels']"], f':has({header} a[href*="{frag}" i])'))
+            if ch["pattern"]:
+                ln(cosmetic("www.youtube.com", ["ytd-browse[page-subtype='channels']"], f":has({header}:has-text({ch['pattern']}))"))
+        if ch["pattern"]:
+            ln(cosmetic("www.youtube.com", ["ytd-browse[page-subtype='playlist']"], f":has(ytd-playlist-header-renderer:has-text({ch['pattern']}))"))
+        for frag in href_frags:
+            ln(cosmetic("www.youtube.com", ["ytd-browse[page-subtype='playlist']"], f':has(ytd-playlist-header-renderer a[href*="{frag}" i])'))
     ln()
 
     ln("! YT/YTM VIDEOS")
@@ -173,6 +243,9 @@ def main():
     for vid in unique_videos:
         ln(cosmetic("www.youtube.com", RENDERERS, f':has(a[href*="{vid}"])'))
         ln(f"||www.youtube.com/watch?v={vid}^")
+        ln(f"||www.youtube.com/shorts/{vid}^")
+        ln(f"||www.youtube.com/embed/{vid}^")
+        ln(f"||youtu.be/{vid}^")
         ln(cosmetic("music.youtube.com", YTM_RENDERERS, f':has(a[href*="{vid}"])'))
         ln(f"||music.youtube.com/watch?v={vid}^")
     ln()
@@ -185,7 +258,7 @@ def main():
         ln(cosmetic("www.youtube.com", RENDERERS, f":has(#channel-name:has-text({pattern}))"))
         ln(cosmetic("www.youtube.com", RENDERERS, f":has(yt-formatted-string:has-text({pattern}))"))
         ln(cosmetic("www.youtube.com", RENDERERS, f":has(.yt-core-attributed-string:has-text({pattern}))"))
-        
+
         # Block whole channel/playlist pages if their header matches the keyword
         ln(cosmetic("www.youtube.com", ["ytd-browse[page-subtype='channels']"], f":has(ytd-c4-tabbed-header-renderer:has-text({pattern}))"))
         ln(cosmetic("www.youtube.com", ["ytd-browse[page-subtype='channels']"], f":has(ytd-page-header-renderer:has-text({pattern}))"))
@@ -221,8 +294,8 @@ def main():
     total = sum(1 for l in result.splitlines() if l and not l.startswith("!"))
 
     print(f"Written {OUTPUT_FILE} ({total} rules)")
-    print(f"Channels: {len(unique_channels)} (Applied to YT & YTM)")
-    print(f"Videos:   {len(unique_videos)} x 4 (YT/YTM Cosmetic + YT/YTM Network)")
+    print(f"Channels: {len(unique_channels)} (rule count per channel varies with id/handle/pattern fields present)")
+    print(f"Videos:   {len(unique_videos)} x 8 (YT/YTM cosmetic + watch/shorts/embed/youtu.be network, x2 domains)")
     print(f"Keywords: {len(unique_keywords)} x 8 (Various Title/Channel combinations)")
 
 if __name__ == "__main__":
