@@ -3,6 +3,35 @@
 ||cyberdrop.me^
 ||nytimes.com^
 
+! Murdoch Owned Properties (News Corp & Fox Corp)
+||fox.com^
+||foxnews.com^
+||foxbusiness.com^
+||foxsports.com^
+||tubitv.com^
+!||tmz.com^
+||wsj.com^
+||nypost.com^
+||barrons.com^
+||marketwatch.com^
+||harpercollins.com^
+||realtor.com^
+||thesun.co.uk^
+||thetimes.co.uk^
+||talk.tv^
+||talksport.com^
+||virginradio.co.uk^
+||theaustralian.com.au^
+||news.com.au^
+||skynews.com.au^
+||dailytelegraph.com.au^
+||heraldsun.com.au^
+||couriermail.com.au^
+||adelaidenow.com.au^
+||themercury.com.au^
+||ntnews.com.au^
+!||realestate.com.au^
+
 ! Deviantart
 deviantart.com###block-notice > .block-notice > .banner-wrap
 deviantart.com###block-notice > .block-notice
