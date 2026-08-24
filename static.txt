@@ -50,16 +50,7 @@ www.youtube.com##ytd-moving-thumbnail-renderer
 www.youtube.com##.ytp-inline-preview-ui
 !! YouTube Premium promo bar
 www.youtube.com##ytd-mealbar-promo-renderer
-!! Recommended Sidebar
-www.youtube.com###secondary.ytd-watch-flexy
-www.youtube.com##.ytp-chrome-bottom:style(width: calc(100% - 20px) !important;)
-www.youtube.com##.ytp-chapter-hover-container:style(flex-grow: 1 !important;)
-www.youtube.com##.ytp-chapters-container:style(display: flex !important;)
-www.youtube.com##ytd-watch-flexy:not([theater]) :is(.html5-video-container, .video-stream):style(width: 100% !important; height: 100% !important;)
-!! Previously Styles
-www.youtube.com##.ytp-chapter-container:style(max-width: 100% !important;)
-www.youtube.com##.ytp-chapter-title-content:style(max-width: 100% !important;)
-www.youtube.com##.ytp-chapter-title:style(max-width: 100% !important;)
+!! Random odds: voice search button on the search bar
 www.youtube.com###voice-search-button
 !! Tracking Stuff
 $removeparam=feature,domain=youtube.com|youtu.be
@@ -67,31 +58,6 @@ $removeparam=gclid,domain=youtube.com|youtu.be
 $removeparam=kw,domain=youtube.com|youtu.be
 $removeparam=si,domain=youtube.com|youtu.be
 $removeparam=pp,domain=youtube.com|youtu.be
-
-! Phanpy
-phanpy.social###search-page ul.accounts-list li:style(flex-basis: 100% !important;)
-phanpy.social##li.timeline-item-carousel:style(height: 0px; visibility: hidden; margin: -8px 0px !important;)
-phanpy.social##.embed-modal-container .embed-content iframe:style(margin-top: -2vw; width: max(var(--width), 50vw);)
-phanpy.social###generic-accounts-container .accounts-list li:style(flex-basis: 100%;)
-phanpy.social###compose-container .status-preview:style(max-height: unset !important;)
-
-! TuneIn
-tunein.com###sidebarNavLinks:style(display: flex !important; flex-direction: column !important;)
-!! Home/Search
-tunein.com###sidebarNavLinks [class^='leftSide-module__navigationMenuItemWrapper___']:has(> [data-testid="homeMenuItem"]):style(order: 0 !important;)
-tunein.com###sidebarNavLinks [class^='leftSide-module__navigationMenuItemWrapper___']:has(> [data-testid="searchMenuItem"]):style(order: 1 !important;)
-!! Reordering Menu
-tunein.com###sidebarNavLinks [class^='leftSide-module__navigationMenuItemWrapper___']:has(> [data-testid="favoritesMenuItem"]):style(order: 2 !important;)
-tunein.com###sidebarNavLinks [class^='leftSide-module__navigationMenuItemWrapper___']:has(> [data-testid="recentsMenuItem"]):style(order: 3 !important;)
-tunein.com###sidebarNavLinks [class^='leftSide-module__navigationMenuItemWrapper___']:has(> [data-testid="premiumMenuItem"]):style(order: 4 !important;)
-tunein.com###sidebarNavLinks [class^='leftSide-module__navigationMenuItemWrapper___']:has(> [data-testid="audiobooksMenuItem"]):style(order: 5 !important;)
-tunein.com###sidebarNavLinks [class^='leftSide-module__navigationMenuItemWrapper___']:has(> [data-testid="mapViewMenuItem"]):style(order: 6 !important;)
-tunein.com###sidebarNavLinks [class^='leftSide-module__navigationMenuItemWrapper___']:has(> [data-testid="musicMenuItem"]):style(order: 7 !important;)
-tunein.com###sidebarNavLinks [class^='leftSide-module__navigationMenuItemWrapper___']:has(> [data-testid="sportsMenuItem"]):style(order: 8 !important;)
-tunein.com###sidebarNavLinks [class^='leftSide-module__navigationMenuItemWrapper___']:has(> [data-testid="newsMenuItem"]):style(order: 9 !important;)
-tunein.com###sidebarNavLinks [class^='leftSide-module__navigationMenuItemWrapper___']:has(> [data-testid="podcastsMenuItem"]):style(order: 10 !important;)
-tunein.com###sidebarNavLinks [class^='leftSide-module__navigationMenuItemWrapper___']:has(> [data-testid="regionsMenuItem"]):style(order: 11 !important;)
-tunein.com###sidebarNavLinks [class^='leftSide-module__navigationMenuItemWrapper___']:has(> [data-testid="languagesMenuItem"]):style(order: 12 !important;)
 
 ! Bandcamp
 !! Hide Follow/Mailing List Modal
