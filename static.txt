@@ -32,6 +32,12 @@
 ||ntnews.com.au^
 !||realestate.com.au^
 
+! X
+!! Hide Post Box in timeline
+x.com##div[data-testid="primaryColumn"] > div > div > div:has(div[data-testid="toolBar"])
+! Removes "More From This Author" posts between replies
+x.com##[aria-label="Timeline: Conversation"] > div > :is([data-testid="cellInnerDiv"]:has(> div > div > div > h2):has(+ div + div + div + div > div > div > [href^="/i/user/"]), [data-testid="cellInnerDiv"]:has(> div > div > div > h2) + div:has(+ div + div + div > div > div > [href^="/i/user/"]), [data-testid="cellInnerDiv"]:has(> div > div > div > h2) + div + div:has(+ div + div > div > div > [href^="/i/user/"]), [data-testid="cellInnerDiv"]:has(> div > div > div > h2) + div + div + div:has(+ div > div > div > [href^="/i/user/"]), [data-testid="cellInnerDiv"]:has(> div > div > div > h2) + div + div + div + div:has(> div > div > [href^="/i/user/"]))
+
 ! Deviantart
 deviantart.com###block-notice > .block-notice > .banner-wrap
 deviantart.com###block-notice > .block-notice
