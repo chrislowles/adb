@@ -35,6 +35,10 @@
 ! X
 !! Hide Post Box in timeline
 x.com##div[data-testid="primaryColumn"] > div > div > div:has(div[data-testid="toolBar"])
+!! Premium upsell
+x.com##[aria-label='Subscribe to Premium']:upward(.css-g5y9jx)
+!! News sidebar
+!x.com##[data-testid='news_sidebar']:upward(.css-g5y9jx)
 
 ! Deviantart
 deviantart.com###block-notice > .block-notice > .banner-wrap
