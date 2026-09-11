@@ -32,13 +32,14 @@
 ||ntnews.com.au^
 !||realestate.com.au^
 
-! X
-!! Hide Post Box in timeline
-x.com##div[data-testid="primaryColumn"] > div > div > div:has(div[data-testid="toolBar"])
-!! Premium upsell
-x.com##[aria-label='Subscribe to Premium']:upward(.css-g5y9jx)
-!! News sidebar
-x.com##[data-testid='news_sidebar']:upward(.css-g5y9jx)
+! Feedly
+!! Hide the 'Upgrade' button in Feedly's sidebar / navigation
+feedly.com##button:has-text("Upgrade")
+feedly.com##a:has-text("Upgrade")
+!! Hide the upgrade / upsell banners inside the main feed area
+feedly.com##[class*="UpgradeButton"]
+feedly.com##[class*="upsell"]
+feedly.com##div:has-text("Upgrade to Pro")
 
 ! Deviantart
 deviantart.com###block-notice > .block-notice > .banner-wrap
@@ -48,6 +49,9 @@ deviantart.com###block-notice > .block-notice
 !! Certain sections & Breaking News in particular
 www.youtube.com##ytd-rich-section-renderer h2:has-text(/(YouTube Playables|Latest YouTube posts|Top news)/i):upward(ytd-rich-section-renderer)
 www.youtube.com##ytd-shelf-renderer.style-scope:has(span:has-text(/(For you|Explore more|People also watched|Previously watched|From related searches|New for you|Channels new to you)/i))
+! Hide "Explore more topics" shelf
+www.youtube.com##ytd-rich-shelf-renderer:has(#title:has-text(/Explore more topics/i))
+www.youtube.com##ytd-rich-shelf-renderer:has(span:has-text(/Explore more topics/i))
 !! YT Home - Hide Mixes
 youtube.com##ytd-rich-item-renderer:has([href*="start_radio=1"])
 !! YT Player - Hide Mixes in Video End Cards
